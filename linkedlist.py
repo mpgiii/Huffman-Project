@@ -80,7 +80,6 @@ class LinkedList:
             newNode.next = curr
             self.numItems += 1
 
-
     def __add__(self, other):
         if type(self) != type(other):
             raise TypeError("Concatenate undefined for " + \

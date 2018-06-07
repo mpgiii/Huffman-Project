@@ -9,12 +9,12 @@ class PriorityQueue:
     def __compress(self):
         newitems = LinkedList()
         for i in range(self.frontIdx, len(self.items)):
-            newitems.append(self.items[i])
+            newitems.append(self.items[i], 0 - self.items[i].freq)
 
         self.items = newitems
         self.frontIdx = 0
 
-    def dequeue(self):  # NOT DONE
+    def dequeue(self):
         if self.isEmpty():
             raise RuntimeError("Attempt to dequeue an empty priority queue")
 
@@ -31,6 +31,9 @@ class PriorityQueue:
     def enqueue(self, item, priority):
         self.items.insert(item, priority)
 
+    def insert(self, item, priority):
+        self.items.insert(item, priority)
+
     def front(self):
         if self.isEmpty():
             raise RuntimeError("Attempt to access front of empty queue")
@@ -41,8 +44,11 @@ class PriorityQueue:
         return self.frontIdx == len(self.items)
 
     def clear(self):
-        self.items = []
+        self.items = LinkedList()
         self.frontIdx = 0
+
+    def __len__(self):
+        return len(self.items)
 
 
 def main():
