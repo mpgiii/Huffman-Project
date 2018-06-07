@@ -6,9 +6,8 @@ class LinkedList:
     # precede a name but aren't followed by two underscores at the
     # end of the name (i.e. an operator name).
     class __Node:
-        def __init__(self, item, priority=0, next=None):
+        def __init__(self, item, next=None):
             self.item = item
-            self.priority = priority
             self.next = next
 
         def getItem(self):
@@ -17,14 +16,12 @@ class LinkedList:
         def getNext(self):
             return self.next
 
-        def getPriority(self):
-            return self.priority
-
         def setItem(self, item):
             self.item = item
 
         def setNext(self, next):
             self.next = next
+
 
     def __init__(self, contents=[]):
         # Here we keep a reference to the first node in the linked list
@@ -32,7 +29,7 @@ class LinkedList:
         # dummy node to begin with. This dummy node will always be in
         # the first position in the list and will never contain an item.
         # Its purpose is to eliminate special cases in the code below.
-        self.first = LinkedList.__Node(None, None, None)
+        self.first = LinkedList.__Node(None, None)
         self.last = self.first
         self.numItems = 0
 
@@ -60,25 +57,18 @@ class LinkedList:
 
         raise IndexError("LinkedList assignment index out of range")
 
-    def insert(self, item, priority):
-        newNode = LinkedList.__Node(item, priority)
-        prev = None
-        curr = self.first
-        if self.numItems == 0:
-            self.first = newNode
-            self.numItems += 1
-            return
-        while curr is not None and newNode.priority < curr.priority:
-            prev = curr
-            curr = curr.next
-        if prev is None:
-            newNode.next = self.first
-            self.first = newNode
+    def insert(self, index, item):
+        cursor = self.first
+
+        if index < self.numItems:
+            for i in range(index):
+                cursor = cursor.getNext()
+
+            node = LinkedList.__Node(item, cursor.getNext())
+            cursor.setNext(node)
             self.numItems += 1
         else:
-            prev.next = newNode
-            newNode.next = curr
-            self.numItems += 1
+            self.append(item)
 
     def __add__(self, other):
         if type(self) != type(other):
@@ -89,13 +79,13 @@ class LinkedList:
 
         cursor = self.first.getNext()
 
-        while cursor is not None:
+        while cursor != None:
             result.append(cursor.getItem())
             cursor = cursor.getNext()
 
         cursor = other.first.getNext()
 
-        while cursor is not None:
+        while cursor != None:
             result.append(cursor.getItem())
             cursor = cursor.getNext()
 
@@ -104,7 +94,7 @@ class LinkedList:
     def __contains__(self, item):
         # This is left as an exercise for the reader.
         index = self.first
-        while index is not None:
+        while index != None:
             if index.item == item:
                 return True
             index = index.next
@@ -131,7 +121,7 @@ class LinkedList:
 
         cursor1 = self.first.getNext()
         cursor2 = other.first.getNext()
-        while cursor1 is not None:
+        while cursor1 != None:
             if cursor1.getItem() != cursor2.getItem():
                 return False
             cursor1 = cursor1.getNext()
@@ -139,20 +129,19 @@ class LinkedList:
 
         return True
 
-    def __iter__(self):  ###
+    def __iter__(self):
         # This is left as an exercise for the reader.
-        current = self.first
+        current = self.first.next
         while current is not None:
             yield current.item
-            yield current.priority
             current = current.next
 
     def __len__(self):
         # This is left as an exercise for the reader.
         return self.numItems
 
-    def append(self, item, priority):
-        node = LinkedList.__Node(item, priority)
+    def append(self, item):
+        node = LinkedList.__Node(item)
         self.last.setNext(node)
         self.last = node
         self.numItems += 1

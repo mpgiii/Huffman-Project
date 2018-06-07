@@ -14,13 +14,13 @@ def huffman(x):
     for char in x:
         freq = frequency(x, char)
         node = Node(freq, char, None, None)
-        pq.enqueue(node, 0 - freq)
+        pq.enqueue(node, 999 - freq)
 
     while len(pq) > 1:
         T1 = pq.dequeue()
         T2 = pq.dequeue()
         node = Node((T1.freq + T2.freq), None, T1, T2)
-        pq.enqueue(node, 0 - (T1.freq + T2.freq))
+        pq.enqueue(node, 999 - (T1.freq + T2.freq))
 
     T = pq.dequeue()
 

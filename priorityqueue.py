@@ -9,7 +9,7 @@ class PriorityQueue:
     def __compress(self):
         newitems = LinkedList()
         for i in range(self.frontIdx, len(self.items)):
-            newitems.append(self.items[i], 0 - self.items[i].freq)
+            newitems.append(self.items[i])
 
         self.items = newitems
         self.frontIdx = 0
@@ -29,10 +29,20 @@ class PriorityQueue:
         return item
 
     def enqueue(self, item, priority):
-        self.items.insert(item, priority)
+        for i in len(self.items):
+            if len(self.items[i]) > 1:
+                if priority > self.items[i][1]:
+                    self.items.insert(i, (item, priority))
+            else:
+                self.items.insert(len(self.items[i]), (item, priority))
 
     def insert(self, item, priority):
-        self.items.insert(item, priority)
+        for i in len(self.items):
+            if len(self.items[i]) > 1:
+                if priority > self.items[i][1]:
+                    self.items.insert(i, (item, priority))
+            else:
+                self.items.insert(len(self.items[i]), (item, priority))
 
     def front(self):
         if self.isEmpty():
@@ -48,7 +58,7 @@ class PriorityQueue:
         self.frontIdx = 0
 
     def __len__(self):
-        return len(self.items)
+        return self.items.numItems
 
 
 def main():
