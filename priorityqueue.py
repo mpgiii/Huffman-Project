@@ -14,7 +14,7 @@ class PriorityQueue:
         self.items = newitems
         self.frontIdx = 0
 
-    def dequeue(self):
+    def dequeue(self):  # NOT DONE
         if self.isEmpty():
             raise RuntimeError("Attempt to dequeue an empty priority queue")
 
@@ -24,18 +24,18 @@ class PriorityQueue:
         if self.frontIdx * 2 > len(self.items):
             self.__compress()
 
-        item = self.items[self.frontIdx]
+        item = self.items.first.item
         self.frontIdx += 1
         return item
 
     def enqueue(self, item, priority):
-        self.items.append(item, priority)
+        self.items.insert(item, priority)
 
     def front(self):
         if self.isEmpty():
             raise RuntimeError("Attempt to access front of empty queue")
 
-        return self.items[self.frontIdx]
+        return self.items.first.item
 
     def isEmpty(self):
         return self.frontIdx == len(self.items)
@@ -46,7 +46,11 @@ class PriorityQueue:
 
 
 def main():
-    pass
+    PQ = PriorityQueue()
+    PQ.enqueue('a', 0)
+    print(PQ.isEmpty())
+    print(PQ.dequeue())
+    print(PQ.isEmpty())
 
 
 if __name__ == "__main__":

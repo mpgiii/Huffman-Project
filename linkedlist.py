@@ -6,8 +6,9 @@ class LinkedList:
     # precede a name but aren't followed by two underscores at the
     # end of the name (i.e. an operator name).
     class __Node:
-        def __init__(self, item, next=None):
+        def __init__(self, item, priority=0, next=None):
             self.item = item
+            self.priority = priority
             self.next = next
 
         def getItem(self):
@@ -15,6 +16,9 @@ class LinkedList:
 
         def getNext(self):
             return self.next
+
+        def getPriority(self):
+            return self.priority
 
         def setItem(self, item):
             self.item = item
@@ -28,7 +32,7 @@ class LinkedList:
         # dummy node to begin with. This dummy node will always be in
         # the first position in the list and will never contain an item.
         # Its purpose is to eliminate special cases in the code below.
-        self.first = LinkedList.__Node(None, None)
+        self.first = LinkedList.__Node(None, None, None)
         self.last = self.first
         self.numItems = 0
 
@@ -56,18 +60,26 @@ class LinkedList:
 
         raise IndexError("LinkedList assignment index out of range")
 
-    def insert(self, index, item):
-        cursor = self.first
-
-        if index < self.numItems:
-            for i in range(index):
-                cursor = cursor.getNext()
-
-            node = LinkedList.__Node(item, cursor.getNext())
-            cursor.setNext(node)
+    def insert(self, item, priority):
+        newNode = LinkedList.__Node(item, priority)
+        prev = None
+        curr = self.first
+        if self.numItems == 0:
+            self.first = newNode
+            self.numItems += 1
+            return
+        while curr is not None and newNode.priority < curr.priority:
+            prev = curr
+            curr = curr.next
+        if prev is None:
+            newNode.next = self.first
+            self.first = newNode
             self.numItems += 1
         else:
-            self.append(item)
+            prev.next = newNode
+            newNode.next = curr
+            self.numItems += 1
+
 
     def __add__(self, other):
         if type(self) != type(other):
@@ -78,13 +90,13 @@ class LinkedList:
 
         cursor = self.first.getNext()
 
-        while cursor != None:
+        while cursor is not None:
             result.append(cursor.getItem())
             cursor = cursor.getNext()
 
         cursor = other.first.getNext()
 
-        while cursor != None:
+        while cursor is not None:
             result.append(cursor.getItem())
             cursor = cursor.getNext()
 
@@ -93,7 +105,7 @@ class LinkedList:
     def __contains__(self, item):
         # This is left as an exercise for the reader.
         index = self.first
-        while index != None:
+        while index is not None:
             if index.item == item:
                 return True
             index = index.next
@@ -120,7 +132,7 @@ class LinkedList:
 
         cursor1 = self.first.getNext()
         cursor2 = other.first.getNext()
-        while cursor1 != None:
+        while cursor1 is not None:
             if cursor1.getItem() != cursor2.getItem():
                 return False
             cursor1 = cursor1.getNext()
@@ -128,19 +140,20 @@ class LinkedList:
 
         return True
 
-    def __iter__(self):
+    def __iter__(self):  ###
         # This is left as an exercise for the reader.
-        current = self.first.next
+        current = self.first
         while current is not None:
             yield current.item
+            yield current.priority
             current = current.next
 
     def __len__(self):
         # This is left as an exercise for the reader.
         return self.numItems
 
-    def append(self, item):
-        node = LinkedList.__Node(item)
+    def append(self, item, priority):
+        node = LinkedList.__Node(item, priority)
         self.last.setNext(node)
         self.last = node
         self.numItems += 1
@@ -155,89 +168,7 @@ class LinkedList:
 
 
 def main():
-    lst = LinkedList()
-
-    for i in range(100):
-        lst.append(i)
-
-    lst2 = LinkedList(lst)
-
-    print(lst)
-    print(lst2)
-
-    #TEST 1: COPYING LIST
-    if lst == lst2:
-        print("Test 1 Passed")
-    else:
-        print("Test 1 Failed")
-
-    lst3 = lst + lst2
-
-    #TEST 2: ADDING TWO LISTS
-    if len(lst3) == len(lst) + len(lst2):
-        print("Test 2 Passed")
-    else:
-        print("Test 2 Failed")
-
-    #TEST 3 and 4: APPENDING TO LIST
-    if 1 in lst3:
-        print("Test 3 Passed")
-    else:
-        print("Test 3 Failed")
-
-    if 2 in lst3:
-        print("Test 4 Passed")
-    else:
-        print("Test 4 Failed")
-
-    del lst[1]
-
-    #TEST 5: DELETION
-    if 1 in lst:
-        print("Test 5 Failed")
-    else:
-        print("Test 5 Passed")
-
-    #TEST 6: DELETION (KINDA)
-    if len(lst) == 99:
-        print("Test 6 Passed")
-    else:
-        print("Test 6 Failed")
-
-    #STILL DELETION
-    if lst == lst2:
-        print("Test 7 Failed")
-    else:
-        print("Test 7 Passed")
-
-    del lst2[2]
-
-    #STILL DELETION (works?)
-    if lst == lst2:
-        print("Test 8 Failed")
-    else:
-        print("Test 8 Passed")
-
-    lst4 = LinkedList(lst)
-    lst.insert(0, 100)
-    lst4 = LinkedList([100]) + lst4
-
-
-    if lst == lst4:
-        print("Test 9 Passed")
-    else:
-        print("Test 9 Failed")
-
-    lst.insert(1000, 333)
-    lst4.append(333)
-
-    if lst == lst4:
-        print("Test 10 Passed")
-    else:
-        print("Test 10 Failed")
-
-    print(lst)
-    print(lst4)
+    pass
 
 
 if __name__ == "__main__":
