@@ -25,13 +25,21 @@ class PriorityQueue:
             self.__compress()
 
         item = self.items[self.frontIdx]
-        self.frontIdx += 1
+        del self.items[0]
         return item[0]
 
     def enqueue(self, item, priority):
         def getpriority(elem):
             return elem[1]
-        self.items.append((item, priority))
+
+        def breakties(elem):
+            try:
+                return elem[0].ord
+            except:
+                return 0
+
+        self.items.insert(0, (item, priority))
+        self.items = sorted(self.items, key=breakties)
         self.items = sorted(self.items, key=getpriority, reverse=True)
 
     def front(self):
@@ -40,7 +48,7 @@ class PriorityQueue:
 
         return self.items[self.frontIdx][0]
 
-    def isEmpty(self): 
+    def isEmpty(self):
         return self.frontIdx == len(self.items)
 
     def clear(self):
@@ -50,7 +58,8 @@ class PriorityQueue:
     def __len__(self):
         return len(self.items)
 
-    def
+    def __repr__(self):
+        return str(len(self.items))
 
 
 def main():

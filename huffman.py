@@ -7,6 +7,10 @@ class Node:
         self.char = char
         self.left = left
         self.right = right
+        if self.char is not None:
+            self.ord = ord(self.char)
+        else:
+            self.ord = -100000000
 
     def __repr__(self):
         return str(self.char)
@@ -34,29 +38,33 @@ def huffman(x):
             seen.append(char)
             char_freq = freq[char]
             node = Node(char, char_freq)     # create a single node binary tree
-            pq.enqueue(node, 999 - char_freq)  # 999 - because higher freq -> lower priority
+            pq.enqueue(node, 0 - char_freq)  # negative number because higher freq -> lower priority
 
-    print(pq)
     while len(pq) > 1:
         T1 = pq.dequeue()
         T2 = pq.dequeue()
         node = Node(None, (T1.freq + T2.freq), T1, T2)
-        pq.enqueue(node, 999 - (T1.freq + T2.freq))
+        pq.enqueue(node, 0 - (T1.freq + T2.freq))
 
     T = pq.dequeue()
 
     return T
 
-def get_huffman_code(char, root):
-    code = []
-    if root == char:
-        return code.join()
-    if root.left == char:
-        code.append(1)
-    if root.right == char:
-        code.append(0)
 
-    return code.join()
+def get_huffman_code(char, root):
+    if root.char == char:
+        return ''
+    else:
+        if root.left is not None:
+            code = get_huffman_code(char, root.left)
+            if code is not None:
+                code = '0' + code
+                return code
+        if root.right is not None:
+            code = get_huffman_code(char, root.right)
+            if code is not None:
+                code = '1' + code
+                return code
 
 
 def frequency_dict(x):
@@ -69,14 +77,13 @@ def frequency_dict(x):
 
 
 def main():
-    sent = 'aaaaggcttt'
+    sent = 'StringTeessttt'
     codes = dict()
     root = huffman(sent)
     for ch in sent:
         codes[ch] = get_huffman_code(ch, root)
 
     print(codes)
-    print("{'a': '0', 'g': '111', 'c': '110', 't': '10'}")
 
 
 if __name__ == "__main__":
